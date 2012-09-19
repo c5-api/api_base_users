@@ -3,10 +3,16 @@
 class UsersApiRouteController extends ApiRouteController {
 
 	public function run($ID = false) {
+		$int = Loader::helper('validation/numbers');
 		switch (API_REQUEST_METHOD) {
 			case 'GET':
-				if($ID && $ID > 0) {
-					return $this->getUser($ID);
+				if($ID && $ID != 0) {
+					if($int->integer($ID)) {
+						return $this->getUser($ID);
+					} else {
+						$this->setCode(400);
+						$this->respond(array('error' => 'Bad Request'));
+					}
 				} else {
 					return $this->getList();
 				}
