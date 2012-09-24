@@ -17,7 +17,7 @@ echo Loader::helper('concrete/dashboard')->getDashboardPaneHeaderWrapper('/users
 					<tbody>
 						<?php
 						foreach($list[$type] as $handle => $name) { 
-							if(in_array($handle, $selected[$type])) {
+							if(isset($selected[$type]) && in_array($handle, $selected[$type])) {
 								$checked = ' checked';
 							} else {
 								$checked = '';

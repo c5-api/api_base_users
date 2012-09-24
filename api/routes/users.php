@@ -18,8 +18,8 @@ class UsersApiRouteController extends ApiRouteController {
 				}
 			
 			default: //BAD REQUEST
-				$this->setCode(400);
-				$this->respond(array('error' => 'Bad Request'));
+				$this->setCode(405);
+				$this->respond(array('error' => 'Method Not Allowed'));
 		}
 	}
 
@@ -60,16 +60,20 @@ class UsersApiRouteController extends ApiRouteController {
 	}
 
 	private function cleanUser($user) {
-		print_r($user);exit;
+		$active = ApiUsersRouteModel::getSelected();
+
 		$attributes = UserAttributeKey::getList();
 		$natt = array();
 		foreach($attributes as $att) {
-			$val = $user->getAttribute($att->getAttributeKeyHandle());
-			$natt[$att->getAttributeKeyHandle()] = (string) $val;
+			if(in_array($att->getAttributeKeyHandle(), $active['attributes'])) {
+				$val = $user->getAttribute($att->getAttributeKeyHandle());
+				$natt[$att->getAttributeKeyHandle()] = (string) $val;
+			}
 		}
+		$uobj = $this->filterObject($user, $active['user']);
 		$attr = array('attributes' => $natt);
-		$pobj = $this->filterObject($user, array('uID', 'uDateAdded', 'uIsActive', 'uName', 'uEmail', 'uTimezone'));
-		return $this->object_merge($pobj, $attr);
+
+		return $this->object_merge($uobj, $attr);
 	}
 
 }
