@@ -60,7 +60,7 @@ class UsersApiRouteController extends ApiRouteController {
 	}
 
 	private function cleanUser($user) {
-		//$attributes = CollectionAttributeKey::getAttributes($user->cID, $user->vObj->cvID);
+		print_r($user);exit;
 		$attributes = UserAttributeKey::getList();
 		$natt = array();
 		foreach($attributes as $att) {
